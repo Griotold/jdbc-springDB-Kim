@@ -1,12 +1,13 @@
 package hello.jdbc.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.net.ConnectException;
 import java.sql.SQLException;
-
+@Slf4j
 public class UnCheckedAppTest {
 
     @Test
@@ -15,6 +16,17 @@ public class UnCheckedAppTest {
         Controller controller = new Controller();
         Assertions.assertThatThrownBy(() -> controller.request())
                 .isInstanceOf(RuntimeSqlException.class);
+    }
+    @Test
+    @DisplayName("예외 포함과 스택 트레이스")
+    void printEx() {
+        Controller controller = new Controller();
+        try{
+            controller.request();
+        } catch (Exception e) {
+            // e.printStackTrace();
+            log.info("ex", e);
+        }
     }
 
     static class Controller{
@@ -61,6 +73,9 @@ public class UnCheckedAppTest {
     static class RuntimeSqlException extends RuntimeException {
         public RuntimeSqlException(Throwable cause){
             super(cause);
+        }
+
+        public RuntimeSqlException() {
         }
     }
 }
